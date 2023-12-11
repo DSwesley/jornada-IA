@@ -1,6 +1,7 @@
-export default{
-    jump: new KeyboardEvent('keydown', {key: 'Space', Keycode: 32}),
-    dispatch (event) {
-        document.dispatchEvent(this[event]);
+export default {
+    jump: new KeyboardEvent('keydown', { key: 'Space', keyCode: 32 }),  //Pular
+    crouch: new KeyboardEvent('keydown', { key: 'ArrowDown', keyCode: 40 }), //Agachar
+    dispatch(event) {
+      document.dispatchEvent(this[event]);
     }
 }

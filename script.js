@@ -2,7 +2,7 @@ import utils from './utils.js'
 import RNA from './RNA.js'
 import controls from './controls.js'
 
-const SAMPLES = 20
+const SAMPLES = 3
 const game = Runner.instance_;
 let dinoList = []
 let dinoIndex = 0
@@ -36,15 +36,18 @@ setInterval(() => {
             console.log('Melhor pontuação:', bestScore)
         }
         dinoIndex++
+
+
+        if(dinoIndex === SAMPLES) {
+            fillDinoList();
+            dinoIndex = 0
+            bestScore = 0
+    
+        }
+        game.restart()
     }
     
-    if(dinoIndex === SAMPLES) {
-        fillDinoList();
-        dinoIndex = 0
-        bestScore = 0
-
-    }
-    game.restart()
+   
 
      
   const {tRex, horizon, currentSpeed, distanceRan, dimensions} = game
@@ -55,33 +58,35 @@ setInterval(() => {
     y: tRex.yPos,
     speed: currentSpeed
   };
-  const [obstacle] = horizon.obstacle
+  const [obstacle] = horizon.obstacles
   .map((obstacle) => {
-    return {
-        x: obstacle.xPos,
-        y: obstacle.yPos
-    }
-    
+      return {
+          x: obstacle.xPos,
+          y: obstacle.yPos
+      }
   })
   .filter((obstacle) => obstacle.x > player.x)
 
-  if(obstacle) {
-    const distance = 1 - (utils.getDistance(player, obstacle) / dimensions.WIDTH);
-    const speed = player.speed / 6
-    const height = Math.tanh(105- obstacle.y)
+  if (obstacle) {
+  const distance = 1 - (utils.getDistance(player, obstacle) / dimensions.WIDTH)
+  const speed = player.speed / 6
+  const height = Math.tanh(105 - obstacle.y)
 
-    const[jump, crouch] = dino.compute([
-        distance,
-        speed,
-        height
-    ]);
+  const [jump, crouch] = dino.compute([
+      distance,
+      speed,
+      height
+  ]);
 
-    if (jump === crouch) return;
-    if (jump) controls.dispatch('jump') // Se for verdadeirea o dinossauro pula
-    if (crouch) controls.dispatch('crouch')
- 
-  };
+  if (jump === crouch) return;
+  if (jump) controls.dispatch('jump')
+  if (crouch) controls.dispatch('crouch')
+
+
+};
+
 }, 100);
+
 
 /*const s = document.createElement('script');
 s.type = 'module';
